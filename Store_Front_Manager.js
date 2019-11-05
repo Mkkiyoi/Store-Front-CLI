@@ -32,3 +32,4 @@ let viewAllProducts = () => {
         promptUser();
     });
 }
+
