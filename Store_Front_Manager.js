@@ -19,14 +19,14 @@ let connection = mysql.createConnection({
 });
 
 let viewAllProducts = () => {
-    connection.query('SELECT ProductID, ProductName, Price FROM `Products`', (error, results, fields) => {
+    connection.query('SELECT ProductID, ProductName, Price, StockQuantity FROM `Products`', (error, results, fields) => {
         // error will be an Error if one occurred during the query
         // results will contain the results of the query
         // fields will contain information about the returned results fields (if any)
-        console.log('ID     Product                 Price')
+        console.log('ID     Product                 Price     Quantity')
         console.log('------------------------');
         results.forEach((result) => {
-            console.log(result.ProductID + '      ' + result.ProductName + '                  ' + result.Price);
+            console.log(result.ProductID + '      ' + result.ProductName + '                  ' + result.Price + '     ' + result.StockQuantity);
             console.log('------------------------')
         });
         promptUser();
