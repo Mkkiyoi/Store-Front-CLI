@@ -43,6 +43,7 @@ let managerOptions = () => {
                 addToInventory();
                 break;
             case 'Add New Product':
+                addNewProduct();
                 break;
         }
     });
@@ -91,10 +92,39 @@ let addToInventory = () => {
     ]).then((response) => {
         connection.query('SELECT StockQuantity FROM `Products` WHERE ProductID = ' + response.id, (error, results, fields) => {
             if (error) throw error;
-            let quantityToAdd = result[0].StockQuantity + response.quantity;
+            let quantityToAdd = parseInt(results[0].StockQuantity) + parseInt(response.quantity);
             connection.query('UPDATE Products SET StockQuantity = ? WHERE ProductID = ?', [quantityToAdd, response.id], (error, results, fields) => {
                 if (error) throw error;
+                connection.end();
             });
+        });
+    });
+}
+
+let addNewProduct = () => {
+    inquirer.prompt([
+        {
+            name: 'name',
+            message: 'What is the name of the product you are adding?'
+        },
+        {
+            name: 'department',
+            message: 'What department is the product in?'
+        },
+        {
+            name: 'price',
+            message: "What is the product's price?"
+        },
+        {
+            name: 'quantity',
+            message: 'What is the quantity you are adding to the inventory?'
+        }
+    ]).then((response) => {
+        connection.query('INSERT INTO `Products` (ProductName, DepartmentName, Price, StockQuantity) VALUES (?, ?, ?, ?)', 
+            [response.name, response.department, response.price, response.quantity], function (error, results, fields) {
+                if (error) throw error;
+                console.log(response.quantity + ' ' + response.name + 's successfully added to the inventory.');
+                connection.end();
         });
     });
 }

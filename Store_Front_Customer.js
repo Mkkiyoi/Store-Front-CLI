@@ -46,13 +46,14 @@ let promptUser = () => {
             message: 'How many would you like to buy?'
         }
     ]).then((response) => {
-        let queryStr = 'SELECT ProductName, Price, StockQuantity FROM `Products` WHERE ProductID = ' + response.id;
+        let queryStr = 'SELECT ProductName, Price, StockQuantity, ProductSales FROM `Products` WHERE ProductID = ' + response.id;
         connection.query(queryStr, (error, results, fields) => {
             if (error) throw error;
     
-            let productQuantityLeft = results[0].StockQuantity - response.quantity;
+            let productQuantityLeft = parseInt(results[0].StockQuantity) - parseInt(response.quantity);
+            let newProductSales = results[0].ProductSales + (results[0].Price * response.quantity);
             if (productQuantityLeft >= 0) {
-                updateQuery(connection, response.id, productQuantityLeft);
+                updateQuery(connection, response.id, productQuantityLeft, newProductSales);
                 console.log('You bought ' + response.quantity + ' ' + results[0].ProductName + 's for \$' + results[0].Price * response.quantity);
             } else {
                 console.log('Insufficient quantity left!')
@@ -67,8 +68,8 @@ let promptUser = () => {
     
 // }
 
-let updateQuery = (connection, id, quantity) => {
-    connection.query('UPDATE Products SET StockQuantity = ? WHERE ProductID = ?', [quantity,id], (error, results, fields) => {
+let updateQuery = (connection, id, quantity, newProductSales) => {
+    connection.query('UPDATE Products SET StockQuantity = ?, ProductSales = ? WHERE ProductID = ?', [quantity, newProductSales, id], (error, results, fields) => {
         if (error) throw error;
     });
 }
