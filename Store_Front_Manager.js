@@ -18,6 +18,34 @@ let connection = mysql.createConnection({
     database: "Store_Front_DB"
 });
 
+let managerOptions = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'option',
+            message: 'Choose an option:',
+            choices: [
+                'View Products for Sale',
+                'View Low Inventory',
+                'Add to Inventory',
+                'Add New Product'
+            ]
+        }
+    ]).then((response) => {
+        switch (response.option) {
+            case 'View Products for Sale':
+                viewAllProducts();
+                break;
+            case 'View Low Inventory':
+                break;
+            case 'Add to Inventory':
+                break;
+            case 'Add New Product':
+                break;
+        }
+    });
+}
+
 let viewAllProducts = () => {
     connection.query('SELECT ProductID, ProductName, Price, StockQuantity FROM `Products`', (error, results, fields) => {
         // error will be an Error if one occurred during the query
@@ -29,7 +57,8 @@ let viewAllProducts = () => {
             console.log(result.ProductID + '      ' + result.ProductName + '                  ' + result.Price + '     ' + result.StockQuantity);
             console.log('------------------------')
         });
-        promptUser();
+        connection.end();
     });
 }
 
+managerOptions();
