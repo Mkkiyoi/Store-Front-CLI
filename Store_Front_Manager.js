@@ -6,16 +6,10 @@ let mysql = require('mysql');
 
 let connection = mysql.createConnection({
     host: "localhost",
-
-    // Your port; if not 3306
     port: 3306,
-
-    // Your username
     user: "root",
-
-    // Your password
     password: keys.CREDENTIALS.secret,
-    database: "Store_Front_DB"
+    database: "StoreFrontDB"
 });
 
 let managerOptions = () => {
@@ -45,36 +39,34 @@ let managerOptions = () => {
             case 'Add New Product':
                 addNewProduct();
                 break;
+            case 'Exit':
+                connection.end();
+                break;
         }
     });
 }
 
 let viewAllProducts = () => {
     connection.query('SELECT ProductID, ProductName, Price, StockQuantity FROM `Products`', (error, results, fields) => {
-        // error will be an Error if one occurred during the query
-        // results will contain the results of the query
-        // fields will contain information about the returned results fields (if any)
-        console.log('ID     Product                 Price     Quantity')
-        console.log('------------------------');
+        if (error) throw error;
+        let headers = ['ProductID', 'ProductName', 'Price', 'StockQuantity'];
+        let rows = [];
         results.forEach((result) => {
-            console.log(result.ProductID + '      ' + result.ProductName + '                  ' + result.Price + '     ' + result.StockQuantity);
-            console.log('------------------------')
+            rows.push([result.ProductID, result.ProductName, result.Price, result.StockQuantity]);
         });
+        printTable(headers, rows);
         connection.end();
     });
 }
 
 let viewLowInventory = () => {
     connection.query('SELECT ProductID, ProductName, Price, StockQuantity FROM `Products` WHERE StockQuantity < 5', (error, results, fields) => {
-        // error will be an Error if one occurred during the query
-        // results will contain the results of the query
-        // fields will contain information about the returned results fields (if any)
-        console.log('ID     Product                 Price     Quantity')
-        console.log('------------------------');
+        let headers = ['ProductID', 'ProductName', 'Price', 'StockQuantity'];
+        let rows = [];
         results.forEach((result) => {
-            console.log(result.ProductID + '      ' + result.ProductName + '                  ' + result.Price + '     ' + result.StockQuantity);
-            console.log('------------------------')
+            rows.push([result.ProductID, result.ProductName, result.Price, result.StockQuantity]);
         });
+        printTable(headers, rows);
         connection.end();
     });
 }
@@ -127,6 +119,24 @@ let addNewProduct = () => {
                 connection.end();
         });
     });
+}
+
+let printTable = (headers, rows) => {
+    let Table = require('cli-table');
+ 
+    let table = new Table({
+        head: headers,
+        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+               , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+               , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+               , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    });
+    
+    rows.forEach((row) => {
+        table.push(row);
+    });
+    
+    console.log(table.toString());
 }
 
 managerOptions();

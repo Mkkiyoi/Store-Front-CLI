@@ -15,7 +15,7 @@ CREATE TABLE Products (
     ProductName VARCHAR(30) NOT NULL,
     Price DECIMAL(10,2) NOT NULL,
     StockQuantity INT NOT NULL,
-    ProductSales DECIMAL(10,2) NOT NULL,
+    ProductSales DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     DepartmentID INT NOT NULL,
     CONSTRAINT FK_DepartmentID FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
 );
@@ -42,5 +42,5 @@ VALUES
 
 
 
-SELECT ProductName, StockQuantity FROM Products WHERE ProductID = 3
-SELECT * FROM Products;
+
+

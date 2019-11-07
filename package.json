@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mkkiyoi/Store-Front-CLI"
+    "url": "git+https://github.com/Mkkiyoi/Store-Front-CLI.git"
   },
   "keywords": [
     "MySQL",
@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/Mkkiyoi/Store-Front-CLI#readme",
   "dependencies": {
+    "cli-table": "^0.3.1",
     "dotenv": "^8.2.0",
     "inquirer": "^7.0.0",
     "mysql": "^2.17.1"
-  }
+  },
+  "devDependencies": {}
 }
