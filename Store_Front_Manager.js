@@ -22,7 +22,8 @@ let managerOptions = () => {
                 'View Products for Sale',
                 'View Low Inventory',
                 'Add to Inventory',
-                'Add New Product'
+                'Add New Product',
+                'Exit'
             ]
         }
     ]).then((response) => {
@@ -101,7 +102,7 @@ let addNewProduct = () => {
         },
         {
             name: 'department',
-            message: 'What department is the product in?'
+            message: 'What is the department number of the department product is in?'
         },
         {
             name: 'price',
@@ -112,7 +113,7 @@ let addNewProduct = () => {
             message: 'What is the quantity you are adding to the inventory?'
         }
     ]).then((response) => {
-        connection.query('INSERT INTO `Products` (ProductName, DepartmentName, Price, StockQuantity) VALUES (?, ?, ?, ?)', 
+        connection.query('INSERT INTO `Products` (ProductName, DepartmentID, Price, StockQuantity) VALUES (?, ?, ?, ?)', 
             [response.name, response.department, response.price, response.quantity], function (error, results, fields) {
                 if (error) throw error;
                 console.log(response.quantity + ' ' + response.name + 's successfully added to the inventory.');

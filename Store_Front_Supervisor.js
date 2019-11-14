@@ -20,7 +20,8 @@ let supervisorOptions = () => {
             message: 'Choose an option:',
             choices: [
                 'View Product Sales by Department',
-                'Create New Department'
+                'Create New Department',
+                'Exit'
             ]
         }
     ]).then((response) => {
@@ -42,7 +43,6 @@ let viewProductSalesByDepartment = () => {
     connection.query('SELECT d.DepartmentID, d.DepartmentName, d.OverHeadCosts, SUM(p.ProductSales) AS ps, (SUM(p.ProductSales) - d.OverHeadCosts) AS TotalProfit FROM Departments AS d JOIN Products AS p ON d.DepartmentID = p.DepartmentID GROUP BY d.DepartmentID', 
         function (error, results, fields) {
             if (error) throw error;
-            console.log(JSON.stringify(results, null, 2));
             let headers = ['DepartmentID', 'DepartmentName', 'OverHeadCosts', 'ProductSales', 'TotalProfit'];
             let rows = [];
             results.forEach((result) => {
